@@ -12,7 +12,7 @@ const index = (req, res, next) => {
   Cart.find()
     .then(carts => res.json({
       carts: carts.map((e) =>
-        e.toJSON({ virtuals: true, user: req.user }))
+        e.toJSON({ virtuals: false, user: req.user }))
     }))
     .catch(next)
 }
@@ -24,9 +24,11 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
+  console.log(req.body)
   const cart = Object.assign(req.body.cart, {
     _owner: req.user._id
   })
+  console.log(cart)
   Cart.create(cart)
     .then(cart =>
       res.status(201)

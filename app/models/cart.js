@@ -21,12 +21,12 @@ const cartSchema = new mongoose.Schema({
   }
 })
 
-// shoppingCartSchema.virtual('products').get(function () {
+// cartSchema.virtual('products').get(function () {
 //   return this.quantity.reduce(function (currentValue, previousValue) {
 //     return (currentValue + previousValue)
 //   })
 // })
-// shoppingCartSchema.virtual('products').get(function () {
+// cartSchema.virtual('products').get(function () {
 //   return this.price.reduce(function (currentValue, previousValue) {
 //     return (currentValue + previousValue)
 //   })
