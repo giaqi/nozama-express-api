@@ -2,6 +2,19 @@
 
 const mongoose = require('mongoose')
 
+// delete after testing
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost/nozama-express-api', {
+  useMongoClient: true
+})
+
+const db = mongoose.connection
+
+const done = function () {
+  db.close()
+}
+// end testing
+
 const productSchema = new mongoose.Schema({
   picture_URL: {
     type: String,
@@ -17,9 +30,7 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true,
-    get: getPrice,
-    set: setPrice
+    required: true
   },
   _owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -38,14 +49,19 @@ const productSchema = new mongoose.Schema({
   }
 })
 
-function getPrice (num) {
-  return (num / 100).toFixed(2)
-}
-
-function setPrice (num) {
-  return num * 100
-}
-
 const Product = mongoose.model('Product', productSchema)
+
+// testing below here
+Product.create({
+  picture_URL: 'https://imgur.com/QOfuwAs',
+  name: 'Henry 200',
+  description: 'The smiley Henry 200 vacuum cleaner',
+  price: 125
+})
+  .then(result => result.toObject())
+  .then(console.log)
+  // add this .catch second to last so that the db still closes
+  .catch(console.error)
+  .then(done)
 
 module.exports = Product
