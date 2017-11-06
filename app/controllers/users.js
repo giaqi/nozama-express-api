@@ -64,7 +64,7 @@ const signin = (req, res, next) => {
   User.findOne(search)
     .then(user =>
       user ? user.comparePassword(credentials.password)
-            : Promise.reject(new HttpError(404)))
+            : Promise.reject(new HttpError(401)))
     .then(user =>
       getToken().then(token => {
         user.token = token
