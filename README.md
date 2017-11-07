@@ -15,4 +15,4 @@
 * [Stripe API](https://stripe.com/docs/checkout)
 
 # ERD
-[Original ERD](Team ERD Diag.png)
+[Original ERD](Team-ERD-Diag.png)
