@@ -24,11 +24,9 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
-  console.log(req.body)
   const cart = Object.assign(req.body.cart, {
     _owner: req.user._id
   })
-  console.log(cart)
   Cart.create(cart)
     .then(cart =>
       res.status(201)
