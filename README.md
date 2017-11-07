@@ -6,7 +6,9 @@
 # Links
 
 [Nozama Deployed Client](https://giaqi.github.io/nozama-front-end/)
+
 [Nozama Front-End Repository](https://github.com/giaqi/nozama-front-end)
+
 [Nozama Deployed API](https://thawing-scrubland-72649.herokuapp.com/)
 
 # Technologies Used
