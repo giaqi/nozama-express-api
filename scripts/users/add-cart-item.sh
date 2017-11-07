@@ -9,12 +9,22 @@ curl "${API}${URL_PATH}/${ID}" \
   --header "Authorization: Token token=${TOKEN}" \
   --header "Content-Type: application/json" \
   --data '{
-    "item": {
-      "product": "'"${PRODUCT}"'",
-      "qty": "'"${QTY}"'"
-    }
+    "product": {
+      "_id":"5a0131ebb6f72224ae898ca10",
+      "updatedAt":"2017-11-07T04:09:15.196Z",
+      "createdAt":"2017-11-07T04:09:15.196Z",
+      "picture_URL":"http://www.google.com/",
+      "name":"test",
+      "description":"test",
+      "price":3.5,
+      "_owner":"5a012dd86637f524107fa75e",
+      "__v":0,
+      "id":"5a0131ebb6f72224ae898ca10",
+      "editable":false
+    },
+    "qty": "'"${QTY}"'"
   }'
 
 echo
 
-# TOKEN=l9PoNB+JSN2AcPvrS3+/0tzx9gAbYhySfvDVMvjiOYc=--Ge8Vw7aH3qieWF24l7s+Zvjg9RBi9ERn7F/0xiWrLsE= PRODUCT={"_id":"5a0131e5b6f72224ae898ca6","updatedAt":"2017-11-07T04:09:09.502Z","createdAt":"2017-11-07T04:09:09.502Z","picture_URL":"http://www.google.com/","name":"test","description":"test","price":3.5,"_owner":"5a012dd86637f524107fa75e","__v":0,"id":"5a0131e5b6f72224ae898ca6","editable":false} QTY=2 ID=5a012dd86637f524107fa75e sh scripts/users/add-cart-item.sh
+# TOKEN=8FthnMZPw7hDOudQuaEcsT2Yz3kf36DUYTQ2fcv9Pco=--vPtoSxXrMVRGmtPXimUtXQsjeA5QAg/G3JSXk2lGDFs= PRODUCT={"_id":"5a0131ebb6f72224ae898ca7","updatedAt":"2017-11-07T04:09:15.196Z","createdAt":"2017-11-07T04:09:15.196Z","picture_URL":"http://www.google.com/","name":"test","description":"test","price":3.5,"_owner":"5a012dd86637f524107fa75e","__v":0,"id":"5a0131ebb6f72224ae898ca7","editable":false} QTY=2 ID=5a01c76b34e6d235bd2925c5 sh scripts/users/add-cart-item.sh

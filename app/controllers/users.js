@@ -109,19 +109,18 @@ const changepw = (req, res, next) => {
 }
 
 const addCartItem = (req, res, next) => {
-  if (req.body.item) {
+  if (req.body.product && req.body.qty) {
     User.findOne({
       _id: req.params.id,
       token: req.user.token
     }).then(user => {
       for (let x = 0; x < user.cart.length; x++) {
-        if (user.cart[x][0]._id === req.body.item.product._id) {
-          const newQuantity = (+(user.cart[x][1]) + +(req.body.item.qty)).toString()
-          user.cart.splice(x, 1, [req.body.item.product, newQuantity])
+        if (user.cart[x][0].id === req.body.product.id) {
+          user.cart[x][1] = req.body.qty
           return user.save()
         }
       }
-      user.cart.push([req.body.item.product, req.body.item.qty])
+      user.cart.push([req.body.product, req.body.qty])
       return user.save()
     }).then((user) =>
       res.json({ cart: user.cart })
@@ -131,25 +130,33 @@ const addCartItem = (req, res, next) => {
   }
 }
 
-// const editCart = (req, res, next) => {
-//  if (req.body.query) {
-//    user.cart = []
-// }else {
-//   if (req.body.item) {
-//     User.findOne({
-//       _id: req.params.id,
-//       token: req.user.token
-//     }).then(user => {
-//       user.cart.push([req.body.item.product, req.body.item.qty])
-//       return user.save()
-//     }).then(() =>
-//       res.sendStatus(204)
-//     ).catch(makeErrorHandler(res, next))
-//   } else {
-//     res.sendStatus(400)
-//   }
-// }
-// }
+const removeCartItem = (req, res, next) => {
+  User.findOne({
+    _id: req.params.id,
+    token: req.user.token
+  }).then(user => {
+    if (req.query.clear) {
+      user.cart = []
+      return user.save()
+    }
+    if (req.body.product) {
+      for (let x = 0; x < user.cart.length; x++) {
+        if (user.cart[x][0].id === req.body.product.id) {
+          user.cart.splice(x, 1)
+          return user.save()
+        }
+      }
+    } else {
+      return null
+    }
+  }).then(user => {
+    if (user) {
+      res.json({ cart: user.cart })
+    } else {
+      res.sendStatus(400)
+    }
+  }).catch(makeErrorHandler(res, next))
+}
 
 module.exports = controller({
   index,
@@ -158,7 +165,8 @@ module.exports = controller({
   signin,
   signout,
   changepw,
-  addCartItem
+  addCartItem,
+  removeCartItem
 }, { before: [
   { method: authenticate, except: ['signup', 'signin'] }
 ] })
