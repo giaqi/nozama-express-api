@@ -3,6 +3,7 @@
 const controller = require('lib/wiring/controller')
 const models = require('app/models')
 const Product = models.product
+const User = models.user
 
 const authenticate = require('./concerns/authenticate')
 const setUser = require('./concerns/set-current-user')
@@ -45,9 +46,13 @@ const update = (req, res, next) => {
 }
 
 const destroy = (req, res, next) => {
-  req.product.remove()
-    .then(() => res.sendStatus(204))
-    .catch(next)
+  if (req.user.admin) {
+    req.product.remove()
+      .then(() => res.sendStatus(204))
+      .catch(next)
+  } else {
+    res.sendStatus(401)
+  }
 }
 
 module.exports = controller({
@@ -57,8 +62,7 @@ module.exports = controller({
   update,
   destroy
 }, { before: [
-  { method: setUser, only: ['index', 'show'] },
-  { method: authenticate, except: ['index', 'show'] },
-  { method: setModel(Product), only: ['show'] },
-  { method: setModel(Product, { forUser: true }), only: ['update', 'destroy'] }
+  { method: setUser, only: ['index', 'show', 'destroy'] },
+  { method: setModel(Product), only: ['show', 'destroy'] },
+  { method: setModel(Product, { forUser: true }), only: ['update'] }
 ] })
