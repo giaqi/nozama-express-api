@@ -109,16 +109,47 @@ const changepw = (req, res, next) => {
 }
 
 const addCartItem = (req, res, next) => {
-  User.findOne({
-    _id: req.params.id,
-    token: req.user.token
-  }).then(user => {
-    user.cart.push([req.body.item.product, req.body.item.qty])
-    return user.save()
-  }).then(() =>
-    res.sendStatus(204)
-  ).catch(makeErrorHandler(res, next))
+  if (req.body.item) {
+    User.findOne({
+      _id: req.params.id,
+      token: req.user.token
+    }).then(user => {
+      for (let x = 0; x < user.cart.length; x++) {
+        if (user.cart[x][0]._id === req.body.item.product._id) {
+          const newQuantity = (+(user.cart[x][1]) + +(req.body.item.qty)).toString()
+          user.cart.splice(x, 1, [req.body.item.product, newQuantity])
+          return user.save()
+        }
+      }
+      user.cart.push([req.body.item.product, req.body.item.qty])
+      return user.save()
+    }).then((user) =>
+      res.json({ cart: user.cart })
+    ).catch(makeErrorHandler(res, next))
+  } else {
+    res.sendStatus(400)
+  }
 }
+
+// const editCart = (req, res, next) => {
+//  if (req.body.query) {
+//    user.cart = []
+// }else {
+//   if (req.body.item) {
+//     User.findOne({
+//       _id: req.params.id,
+//       token: req.user.token
+//     }).then(user => {
+//       user.cart.push([req.body.item.product, req.body.item.qty])
+//       return user.save()
+//     }).then(() =>
+//       res.sendStatus(204)
+//     ).catch(makeErrorHandler(res, next))
+//   } else {
+//     res.sendStatus(400)
+//   }
+// }
+// }
 
 module.exports = controller({
   index,
