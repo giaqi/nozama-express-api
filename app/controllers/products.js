@@ -25,16 +25,17 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
-  const product = Object.assign(req.body.product, {
-    _owner: req.user._id
-  })
-  Product.create(product)
-    .then(product =>
-      res.status(201)
-        .json({
-          product: product.toJSON({ virtuals: true, user: req.user })
-        }))
-    .catch(next)
+  if (req.user.admin) {
+    Product.create(req.body.product)
+      .then(product =>
+        res.status(201)
+          .json({
+            product: product.toJSON({ virtuals: true, user: req.user })
+          }))
+      .catch(next)
+  } else {
+    res.sendStatus(401)
+  }
 }
 
 const update = (req, res, next) => {
