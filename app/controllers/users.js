@@ -108,13 +108,26 @@ const changepw = (req, res, next) => {
   ).catch(makeErrorHandler(res, next))
 }
 
+const addCartItem = (req, res, next) => {
+  User.findOne({
+    _id: req.params.id,
+    token: req.user.token
+  }).then(user => {
+    user.cart.push([req.body.item.product, req.body.item.qty])
+    return user.save()
+  }).then(() =>
+    res.sendStatus(204)
+  ).catch(makeErrorHandler(res, next))
+}
+
 module.exports = controller({
   index,
   show,
   signup,
   signin,
   signout,
-  changepw
+  changepw,
+  addCartItem
 }, { before: [
   { method: authenticate, except: ['signup', 'signin'] }
 ] })
