@@ -63,7 +63,7 @@ userSchema.virtual('cartItemPrice').get(function () {
   this.cart.forEach((item) => {
     totalPrice += (item[0].price * item[1])
   })
-  return totalPrice
+  return totalPrice.toFixed(2)
 })
 
 userSchema.pre('save', function (next) {
