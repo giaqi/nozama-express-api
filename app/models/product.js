@@ -19,6 +19,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  // DO WE WANT THIS?
   _owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
