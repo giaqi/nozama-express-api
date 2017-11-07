@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  admin: {
+    type: Boolean,
+    default: false
+  },
   passwordDigest: String
 }, {
   timestamps: true,

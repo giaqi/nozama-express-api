@@ -3,6 +3,7 @@
 const controller = require('lib/wiring/controller')
 const models = require('app/models')
 const Product = models.product
+const User = models.user
 
 const authenticate = require('./concerns/authenticate')
 const setUser = require('./concerns/set-current-user')
@@ -24,30 +25,37 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
-  const product = Object.assign(req.body.product, {
-    _owner: req.user._id
-  })
-  Product.create(product)
-    .then(product =>
-      res.status(201)
-        .json({
-          product: product.toJSON({ virtuals: true, user: req.user })
-        }))
-    .catch(next)
+  if (req.user.admin) {
+    Product.create(req.body.product)
+      .then(product =>
+        res.status(201)
+          .json({
+            product: product.toJSON({ virtuals: true, user: req.user })
+          }))
+      .catch(next)
+  } else {
+    res.sendStatus(401)
+  }
 }
 
 const update = (req, res, next) => {
-  delete req.body.product._owner  // disallow owner reassignment.
-
-  req.product.update(req.body.product)
-    .then(() => res.sendStatus(204))
-    .catch(next)
+  if (req.user.admin) {
+    req.product.update(req.body.product)
+      .then(() => res.sendStatus(204))
+      .catch(next)
+  } else {
+    res.sendStatus(401)
+  }
 }
 
 const destroy = (req, res, next) => {
-  req.product.remove()
-    .then(() => res.sendStatus(204))
-    .catch(next)
+  if (req.user.admin) {
+    req.product.remove()
+      .then(() => res.sendStatus(204))
+      .catch(next)
+  } else {
+    res.sendStatus(401)
+  }
 }
 
 module.exports = controller({
@@ -57,8 +65,6 @@ module.exports = controller({
   update,
   destroy
 }, { before: [
-  { method: setUser, only: ['index', 'show'] },
-  { method: authenticate, except: ['index', 'show'] },
-  { method: setModel(Product), only: ['show'] },
-  { method: setModel(Product, { forUser: true }), only: ['update', 'destroy'] }
+  { method: setUser, only: ['index', 'show', 'destroy', 'update', 'create'] },
+  { method: setModel(Product), only: ['show', 'destroy', 'update'] }
 ] })
