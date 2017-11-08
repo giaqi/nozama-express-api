@@ -57,7 +57,7 @@ userSchema.virtual('password').set(function (password) {
 userSchema.virtual('cartItemTotal').get(function () {
   let totalItems = 0
   this.cart.forEach((item) => {
-    totalItems += item[1]
+    totalItems += +item[1]
   })
   return totalItems
 })
