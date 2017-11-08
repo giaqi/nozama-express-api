@@ -9,7 +9,7 @@ const setUser = require('./concerns/set-current-user')
 const setModel = require('./concerns/set-mongoose-model')
 
 const index = (req, res, next) => {
-  Purchase.find()
+  Purchase.find({_owner: req.user._id})
     .then(purchases => res.json({
       purchases: purchases.map((e) =>
         e.toJSON({ virtuals: true, user: req.user }))
@@ -55,6 +55,6 @@ module.exports = controller({
   create
 }, { before: [
   { method: setUser, only: ['index', 'show', 'create'] },
-  { method: authenticate, except: ['index', 'show'] },
+  { method: authenticate },
   { method: setModel(Purchase), only: ['show'] }
 ] })
