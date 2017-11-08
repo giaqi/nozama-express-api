@@ -23,10 +23,6 @@ const purchaseSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  stripeUserId: {
-    type: String,
-    required: true
-  },
   _owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

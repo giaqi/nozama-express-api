@@ -24,16 +24,29 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
-  const purchase = Object.assign(req.body.purchase, {
-    _owner: req.user._id
+  const purchase = Object.assign(req.body, {
+    _owner: req.user._id,
+    totalPrice: req.user.cartItemPrice,
+    totalItems: req.user.cartItemTotal,
+    products: req.user.cart
   })
-  Purchase.create(purchase)
-    .then(purchase =>
-      res.status(201)
-        .json({
-          purchase: purchase.toJSON({ virtuals: true, user: req.user })
-        }))
-    .catch(next)
+
+  // check if everything in array is truthy
+  if (Object.keys(purchase).every(key => !!purchase[key])) {
+    Purchase.create(purchase)
+      .then(purchase =>
+        res.status(201)
+          .json({
+            purchase: purchase.toJSON({ virtuals: true, user: req.user })
+          }))
+      .then(() => {
+        req.user.cart = []
+        req.user.save()
+      })
+      .catch(next)
+  } else {
+    res.sendStatus(400)
+  }
 }
 
 const update = (req, res, next) => {
@@ -57,7 +70,7 @@ module.exports = controller({
   update,
   destroy
 }, { before: [
-  { method: setUser, only: ['index', 'show'] },
+  { method: setUser, only: ['index', 'show', 'create'] },
   { method: authenticate, except: ['index', 'show'] },
   { method: setModel(Purchase), only: ['show'] },
   { method: setModel(Purchase, { forUser: true }), only: ['update', 'destroy'] }

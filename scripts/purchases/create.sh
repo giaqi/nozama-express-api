@@ -9,14 +9,8 @@ curl "${API}${URL_PATH}" \
   --header "Content-Type: application/json" \
   --header "Authorization: Token token=${TOKEN}" \
   --data '{
-    "purchase": {
-      "totalPrice": "'"${PRICE}"'",
-      "totalItems": "'"${QTY}"'",
-      "products": "'"${PRODUCTS}"'",
       "stripeInvoice": "'"${INVOICE}"'",
-      "stripeTransaction": "'"${TRANSACTION}"'",
-      "stripeUserId": "'"${STRIPEID}"'"
-    }
-  }'
+      "stripeTransaction": "'"${TRANSACTION}"'"
+    }'
 
 echo
