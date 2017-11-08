@@ -10,7 +10,7 @@ curl "${API}${URL_PATH}/${ID}" \
   --header "Content-Type: application/json" \
   --data '{
     "product": {
-      "_id":"5a0131ebb6f72224ae898ca12",
+      "_id":"5a0131ebb6f72224ae898ca11",
       "updatedAt":"2017-11-07T04:09:15.196Z",
       "createdAt":"2017-11-07T04:09:15.196Z",
       "picture_URL":"http://www.google.com/",
@@ -19,7 +19,7 @@ curl "${API}${URL_PATH}/${ID}" \
       "price":3.5,
       "_owner":"5a012dd86637f524107fa75e",
       "__v":0,
-      "id":"5a0131ebb6f72224ae898ca12"
+      "id":"5a0131ebb6f72224ae898ca11"
     },
     "qty": "'"${QTY}"'"
   }'

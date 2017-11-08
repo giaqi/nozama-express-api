@@ -15,11 +15,7 @@ const purchaseSchema = new mongoose.Schema({
     type: Array,
     required: true
   },
-  stripeInvoice: {
-    type: String,
-    required: true
-  },
-  stripeTransaction: {
+  stripe_purch_id: {
     type: String,
     required: true
   },
