@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  admin: {
+    type: Boolean,
+    default: false
+  },
   passwordDigest: String
 }, {
   timestamps: true,
@@ -48,6 +52,22 @@ userSchema.methods.comparePassword = function (password) {
 
 userSchema.virtual('password').set(function (password) {
   this._password = password
+})
+
+userSchema.virtual('cartItemTotal').get(function () {
+  let totalItems = 0
+  this.cart.forEach((item) => {
+    totalItems += +item[1]
+  })
+  return totalItems
+})
+
+userSchema.virtual('cartItemPrice').get(function () {
+  let totalPrice = 0
+  this.cart.forEach((item) => {
+    totalPrice += (item[0].price * item[1])
+  })
+  return totalPrice.toFixed(2)
 })
 
 userSchema.pre('save', function (next) {
