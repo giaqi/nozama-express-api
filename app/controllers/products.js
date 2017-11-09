@@ -9,11 +9,9 @@ const setModel = require('./concerns/set-mongoose-model')
 
 const index = (req, res, next) => {
   if (req.query.name) {
-    console.log(req.query)
     const search = {}
     const key = Object.keys(req.query)[0]
     const value = req.query[key]
-    console.log(key)
     search[key] = {$regex: new RegExp(value, 'i')}
     Product.find(search)
       .then(products => res.json({
