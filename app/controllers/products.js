@@ -8,12 +8,27 @@ const setUser = require('./concerns/set-current-user')
 const setModel = require('./concerns/set-mongoose-model')
 
 const index = (req, res, next) => {
-  Product.find()
-    .then(products => res.json({
-      products: products.map((e) =>
+  if (req.query.name) {
+    console.log(req.query)
+    const search = {}
+    const key = Object.keys(req.query)[0]
+    const value = req.query[key]
+    console.log(key)
+    search[key] = {$regex: new RegExp(value, 'i')}
+    Product.find(search)
+      .then(products => res.json({
+        products: products.map((e) =>
         e.toJSON({ virtuals: true, user: req.user }))
-    }))
-    .catch(next)
+      }))
+      .catch(next)
+  } else {
+    Product.find()
+      .then(products => res.json({
+        products: products.map((e) =>
+          e.toJSON({ virtuals: true, user: req.user }))
+      }))
+      .catch(next)
+  }
 }
 
 const show = (req, res) => {
